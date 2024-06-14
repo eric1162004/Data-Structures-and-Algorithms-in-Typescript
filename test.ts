@@ -139,24 +139,46 @@ class Tree {
     return this.getIsBinarySearchTree(this.root, -Infinity, Infinity);
   }
 
-  private getIsBinarySearchTree(node: TreeNode, min: number, max: number): boolean {
-    if(!node) return true;
+  private getIsBinarySearchTree(
+    node: TreeNode,
+    min: number,
+    max: number
+  ): boolean {
+    if (!node) return true;
 
-    if(node.value < min || node.value > max) return false; 
-    
-    return this.getIsBinarySearchTree(node.leftNode, min, node.value - 1) 
-    && this.getIsBinarySearchTree(node.rightNode, node.value + 1, max);
+    if (node.value < min || node.value > max) return false;
+
+    return (
+      this.getIsBinarySearchTree(node.leftNode, min, node.value - 1) &&
+      this.getIsBinarySearchTree(node.rightNode, node.value + 1, max)
+    );
+  }
+
+  printNodesAtKDistance(k: number) {
+    this.nodesAtKDistance(this.root, k);
+  }
+
+  private nodesAtKDistance(node: TreeNode, k: number) {
+    if (!node) return;
+
+    if (k === 0) {
+      console.log(node.value);
+      return;
+    }
+
+    this.nodesAtKDistance(node.leftNode, k - 1);
+    this.nodesAtKDistance(node.rightNode, k - 1);
   }
 }
 
 const tree = new Tree();
 const tree2 = new Tree();
 
-const values = [7, 4, 9, 6, 8, 10];
+const values = [7, 4, 9, 1, 6, 8, 10];
 const values1 = [2, 1, 3];
 const values2 = [];
 
-values1.forEach((value) => {
+values.forEach((value) => {
   tree.insert(value);
 });
 
@@ -172,5 +194,5 @@ values1.forEach((value) => {
 // console.log(tree.height());
 // console.log(tree.min());
 
-console.log(tree.isBinarySearchTree());
-
+// console.log(tree.isBinarySearchTree());
+tree.printNodesAtKDistance(2);
