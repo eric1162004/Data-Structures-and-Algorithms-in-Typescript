@@ -109,13 +109,13 @@ class Tree {
   }
 
   equals(other: Tree): boolean {
-    if(!other) return false;
+    if (!other) return false;
 
     return this.getIsEqual(this.root, other.root);
   }
 
   getIsEqual(first: TreeNode, second: TreeNode): boolean {
-    // Is equal if both are empty 
+    // Is equal if both are empty
     if (!first && !second) return true;
 
     // This is a preorder traversal, since we look at the Root first
@@ -134,6 +134,19 @@ class Tree {
   private isLeaf(node: TreeNode) {
     return !node.leftNode && !node.rightNode;
   }
+
+  isBinarySearchTree(): boolean {
+    return this.getIsBinarySearchTree(this.root, -Infinity, Infinity);
+  }
+
+  private getIsBinarySearchTree(node: TreeNode, min: number, max: number): boolean {
+    if(!node) return true;
+
+    if(node.value < min || node.value > max) return false; 
+    
+    return this.getIsBinarySearchTree(node.leftNode, min, node.value - 1) 
+    && this.getIsBinarySearchTree(node.rightNode, node.value + 1, max);
+  }
 }
 
 const tree = new Tree();
@@ -143,18 +156,21 @@ const values = [7, 4, 9, 6, 8, 10];
 const values1 = [2, 1, 3];
 const values2 = [];
 
-values.forEach((value) => {
+values1.forEach((value) => {
   tree.insert(value);
 });
 
-values2.forEach((value) => {
-  tree2.insert(value);
-});
+// values2.forEach((value) => {
+//   tree2.insert(value);
+// });
 
-console.log(tree2.equals(tree) );
+// console.log(tree2.equals(tree));
 
 // tree.printTree();
 // tree.find(11);
 
 // console.log(tree.height());
 // console.log(tree.min());
+
+console.log(tree.isBinarySearchTree());
+
