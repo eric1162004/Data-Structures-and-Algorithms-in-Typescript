@@ -46,45 +46,115 @@ class Tree {
   find(value: number): TreeNode | null {
     let current = this.root;
     while (current) {
-      
       if (current.value === value) {
-        console.log("found: " + value);
+        console.log('found: ' + value);
         return current;
       }
 
       if (current.value > value) {
-          current = current.leftNode;
+        current = current.leftNode;
       } else {
-          current = current.rightNode;
+        current = current.rightNode;
       }
     }
 
-    console.log("Not found: " + value);
+    console.log('Not found: ' + value);
   }
 
   printTree() {
-    if (this.root) this.printInOrder(this.root);
+    this.printInOrder(this.root);
   }
 
+  // Left Root Right = Ascending order
   private printInOrder(node?: TreeNode) {
     if (!node) return;
 
     this.printInOrder(node.leftNode);
-    node.print(); // Visit Left Root Right
+    node.print();
     this.printInOrder(node.rightNode);
+  }
+
+  height(): number {
+    return this.getHeight(this.root);
+  }
+
+  private getHeight(node: TreeNode): number {
+    if (!node) return 0;
+
+    // return if we reach a leave node
+    if (this.isLeaf(node)) return 0;
+
+    return (
+      1 +
+      Math.max(this.getHeight(node.leftNode), this.getHeight(node.rightNode))
+    );
+  }
+
+  min(): number {
+    return this.getMin(this.root);
+  }
+
+  // O(n): we need to traverse all nodes in the tree to find the min value
+  // NOTE: if you have a Binary Search Tree, the min value is the left most node of the tree.
+  // then you get O(log n)
+  getMin(node: TreeNode): number {
+    if (!node) return Infinity;
+
+    if (this.isLeaf(node)) return node.value;
+
+    const left = this.getMin(node.leftNode);
+    const right = this.getMin(node.rightNode);
+
+    return Math.min(node.value, Math.min(left, right));
+  }
+
+  equals(other: Tree): boolean {
+    if(!other) return false;
+
+    return this.getIsEqual(this.root, other.root);
+  }
+
+  getIsEqual(first: TreeNode, second: TreeNode): boolean {
+    // Is equal if both are empty 
+    if (!first && !second) return true;
+
+    // This is a preorder traversal, since we look at the Root first
+    // Is equal if the first and second node is equal
+    // and the left/right tree of both trees are equal
+    if (first && second)
+      return (
+        first.value === second.value &&
+        this.getIsEqual(first.leftNode, second.leftNode) &&
+        this.getIsEqual(first.rightNode, second.rightNode)
+      );
+
+    return false;
+  }
+
+  private isLeaf(node: TreeNode) {
+    return !node.leftNode && !node.rightNode;
   }
 }
 
 const tree = new Tree();
+const tree2 = new Tree();
 
-tree.insert(7);
-tree.insert(4);
-tree.insert(9);
-tree.insert(1);
-tree.insert(6);
-tree.insert(8);
-tree.insert(10);
+const values = [7, 4, 9, 6, 8, 10];
+const values1 = [2, 1, 3];
+const values2 = [];
 
-tree.find(11);
+values.forEach((value) => {
+  tree.insert(value);
+});
+
+values2.forEach((value) => {
+  tree2.insert(value);
+});
+
+console.log(tree2.equals(tree) );
 
 // tree.printTree();
+// tree.find(11);
+
+// console.log(tree.height());
+// console.log(tree.min());
