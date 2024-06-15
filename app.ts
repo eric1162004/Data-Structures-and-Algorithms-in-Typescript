@@ -25,37 +25,21 @@ class TriesNode {
 }
 
 class Tries {
-  root: TriesNode;
-
-  constructor() {
-    this.root = new TriesNode();
-  }
+  root: TriesNode = new TriesNode();
 
   insert(word: string) {
     word = word.toLocaleLowerCase();
 
     let current = this.root;
-    let char;
-    let i = 0;
 
-    while (i < word.length) {
-      char = word[i];
-
-      if (current.children[char]) {
-        current = current.children[char];
-      } else {
+    for (const char of word) {
+      if (!current.children[char]) {
         current.children[char] = new TriesNode(char);
-        current = current.children[char];
       }
-
-      i += 1;
+      current = current.children[char];
     }
 
     current.isEndOfWord = true;
-  }
-
-  private charIndex(character: string): number {
-    return character.toLowerCase().charCodeAt(0) - 'a'.charCodeAt(0);
   }
 }
 
@@ -63,3 +47,5 @@ const tries = new Tries();
 tries.insert('cat');
 tries.insert('catch');
 tries.insert('dog');
+
+console.log('done');
