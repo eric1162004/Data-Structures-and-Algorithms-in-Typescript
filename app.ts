@@ -22,6 +22,18 @@ class TriesNode {
     this.character = character;
     this.children = {};
   }
+
+  hasChild(char: string) {
+    return this.children.hasOwnProperty(char);
+  }
+
+  addChild(char: string) {
+    this.children[char] = new TriesNode(char);
+  }
+
+  getChild(char: string) {
+    return this.children[char];
+  }
 }
 
 class Tries {
@@ -33,10 +45,10 @@ class Tries {
     let current = this.root;
 
     for (const char of word) {
-      if (!current.children[char]) {
-        current.children[char] = new TriesNode(char);
+      if (!current.hasChild(char)) {
+        current.addChild(char);
       }
-      current = current.children[char];
+      current = current.getChild(char);
     }
 
     current.isEndOfWord = true;
