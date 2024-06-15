@@ -16,7 +16,7 @@ index = ch - 'a'
 class TriesNode {
   character?: string;
   isEndOfWord: boolean;
-  children: { [charCode: string]: TriesNode };
+  private children: { [charCode: string]: TriesNode };
 
   constructor(character?: string) {
     this.character = character;
@@ -33,6 +33,10 @@ class TriesNode {
 
   getChild(char: string) {
     return this.children[char];
+  }
+
+  getChildren(): TriesNode[] {
+    return Object.values(this.children);
   }
 }
 
@@ -68,6 +72,19 @@ class Tries {
 
     return current.isEndOfWord;
   }
+
+  traverse() {
+    this._traverse(this.root);
+  }
+
+  private _traverse(root: TriesNode) {
+    // Pre-order: visit the root first
+    console.log(root.character);
+    
+    for(let child of root.getChildren()){
+      this._traverse(child);
+    }
+  }
 }
 
 const tries = new Tries();
@@ -78,9 +95,12 @@ values.forEach((value) => {
   tries.insert(value);
 });
 
-values.forEach((v) => {
-  console.log(v, tries.contains(v));
-  v = v + '!';
-  console.log(v, tries.contains(v));
-});
+// values.forEach((v) => {
+//   console.log(v, tries.contains(v));
+//   v = v + '!';
+//   console.log(v, tries.contains(v));
+// });
+
+tries.traverse();
+
 console.log('done');
