@@ -178,16 +178,16 @@ class Tree {
   }
 }
 
-const tree = new Tree();
-const tree2 = new Tree();
+// const tree = new Tree();
+// const tree2 = new Tree();
 
-const values = [7, 4, 9, 1, 6, 8, 10];
-const values1 = [2, 1, 3];
-const values2 = [];
+// const values = [7, 4, 9, 1, 6, 8, 10];
+// const values1 = [2, 1, 3];
+// const values2 = [];
 
-values.forEach((value) => {
-  tree.insert(value);
-});
+// values.forEach((value) => {
+//   tree.insert(value);
+// });
 
 // values2.forEach((value) => {
 //   tree2.insert(value);
@@ -204,4 +204,4 @@ values.forEach((value) => {
 // console.log(tree.isBinarySearchTree());
 // tree.printNodesAtKDistance(0);
 
-tree.traverseLevelOrder();
+// tree.traverseLevelOrder();
