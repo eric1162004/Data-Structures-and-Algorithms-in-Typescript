@@ -53,11 +53,34 @@ class Tries {
 
     current.isEndOfWord = true;
   }
+
+  contains(word: string): boolean {
+    word = word.toLocaleLowerCase();
+
+    let current = this.root;
+
+    for (const char of word) {
+      if (!current.hasChild(char)) {
+        return false;
+      }
+      current = current.getChild(char);
+    }
+
+    return current.isEndOfWord;
+  }
 }
 
 const tries = new Tries();
-tries.insert('cat');
-tries.insert('catch');
-tries.insert('dog');
 
+const values = ['cat', 'catch', 'dog'];
+
+values.forEach((value) => {
+  tries.insert(value);
+});
+
+values.forEach((v) => {
+  console.log(v, tries.contains(v));
+  v = v + '!';
+  console.log(v, tries.contains(v));
+});
 console.log('done');
