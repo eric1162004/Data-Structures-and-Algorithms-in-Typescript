@@ -1,5 +1,6 @@
 class WNode {
   private label: string;
+  private edges: WEdge[] = [];
 
   constructor(label: string) {
     this.label = label;
@@ -7,6 +8,14 @@ class WNode {
 
   getLabel(): string {
     return this.label;
+  }
+
+  addEdge(to: WNode, weight: number) {
+    this.edges.push(new WEdge(this, to, weight));
+  }
+
+  getEdges(): WEdge[] {
+    return this.edges;
   }
 }
 
@@ -29,12 +38,10 @@ class WEdge {
 // This is a undirect graph
 class WGraph {
   nodes: { [label: string]: WNode } = {}; // {label, node}
-  edges: { [label: string]: WEdge[] } = {}; // {node, edges[]}
 
   addNode(label: string) {
     if (this.hasNode(label)) throw new Error(`Already has node - ${label}`);
     this.nodes[label] = new WNode(label); // add nodes
-    this.edges[label] = []; // initize the edges of the node
   }
 
   addEdge(from: string, to: string, weight: number) {
@@ -44,9 +51,9 @@ class WGraph {
     let toNode = this.getNode(to);
     if (!toNode) throw new Error(`${to} is not in the graph`);
 
-    // both from and to nodes should add this edge
-    this.edges[from].push(new WEdge(fromNode, toNode, weight));
-    this.edges[to].push(new WEdge(toNode, fromNode, weight));
+    // add edge in both nodes
+    fromNode.addEdge(toNode, weight);
+    toNode.addEdge(fromNode, weight);
   }
 
   private getNode(label: string): WNode | null {
@@ -58,12 +65,12 @@ class WGraph {
   }
 
   print() {
-    console.log("---");
-    Object.keys(this.edges).forEach((label) => {
-      this.edges[label].forEach((edge) => {
+    console.log('---');
+    Object.values(this.nodes).forEach((node) => {
+      node.getEdges().forEach((edge) => {
         edge.print();
       });
-      console.log("---");
+      console.log('---');
     });
   }
 }
