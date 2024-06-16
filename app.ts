@@ -38,6 +38,16 @@ class TriesNode {
   getChildren(): TriesNode[] {
     return Object.values(this.children);
   }
+
+  hasChildren(): boolean {
+    return Object.keys(this.children).length > 0;
+  }
+
+  removeChild(char: string) {
+    if (this.hasChild(char)) {
+      delete this.children[char];
+    }
+  }
 }
 
 class Tries {
@@ -79,21 +89,62 @@ class Tries {
 
   private _traverse(root: TriesNode) {
     // Pre-order: visit the root first
-    console.log(root.character);
-    
-    for(let child of root.getChildren()){
+
+    // skip the root as it always contains no character
+    if (root !== this.root) {
+      console.log(root.character);
+    }
+
+    for (let child of root.getChildren()) {
       this._traverse(child);
+    }
+  }
+
+  remove(word: string) {
+    word = word.toLocaleLowerCase();
+    
+    // check if tries has that word
+    if (!this.contains(word)) return;
+    
+    // use post-order traverse reach to the end of the branch
+    this._remove(this.root, word, 0);
+  }
+  
+  // Good example of using Post-order traverse!
+  private _remove(root: TriesNode, word: string, index: number) {
+    // terminating condition = when at the last character of the word
+    if (index == word.length) {
+      root.isEndOfWord = false;
+      return;
+    }
+
+    // fucntion starts here!
+    let char = word.charAt(index);
+    let child = root.getChild(char);
+
+    // Word is not in the tries
+    if (!child) return;
+
+    // recurse
+    this._remove(child, word, index + 1);
+
+    // back from recurse
+    if (!child.hasChildren() && !child.isEndOfWord) {
+      root.removeChild(char);
     }
   }
 }
 
 const tries = new Tries();
 
-const values = ['cat', 'catch', 'dog'];
+const values = ['car', 'care', 'dog'];
 
 values.forEach((value) => {
   tries.insert(value);
 });
+
+// tries.remove("care");
+// tries.remove("car");
 
 // values.forEach((v) => {
 //   console.log(v, tries.contains(v));
