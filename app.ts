@@ -14,7 +14,7 @@ class WNode {
     this.edges.push(new WEdge(this, to, weight));
   }
 
-  getNeighbor(): WEdge[] {
+  getEdges(): WEdge[] {
     return this.edges;
   }
 }
@@ -100,11 +100,17 @@ class PriorityQueue<T extends WNodeEntry> {
     while (currentIndex < length) {
       let swapIndex = currentIndex;
       const leftChildIndex = this.leftChildIndex(currentIndex);
-      if (leftChildIndex < length && this.heap[leftChildIndex].prioirty < this.heap[swapIndex].prioirty) {
+      if (
+        leftChildIndex < length &&
+        this.heap[leftChildIndex].prioirty < this.heap[swapIndex].prioirty
+      ) {
         swapIndex = leftChildIndex;
       }
       const rightChildIndex = this.rightChildIndex(currentIndex);
-      if (rightChildIndex < length && this.heap[rightChildIndex].prioirty < this.heap[swapIndex].prioirty) {
+      if (
+        rightChildIndex < length &&
+        this.heap[rightChildIndex].prioirty < this.heap[swapIndex].prioirty
+      ) {
         swapIndex = rightChildIndex;
       }
       if (swapIndex !== currentIndex) {
@@ -130,9 +136,8 @@ class Path {
     this.nodes.push(node);
   }
 
-  print(){
+  print() {
     console.log(this.nodes);
-    
   }
 }
 
@@ -163,10 +168,10 @@ class WGraph {
 
   getShortestPath(from: string, to: string): Path {
     // valdate nodes
-    const fromNode = this.getNode(from); 
-    if(!fromNode) throw new Error(`${from} does not exist.`);
+    const fromNode = this.getNode(from);
+    if (!fromNode) throw new Error(`${from} does not exist.`);
     const toNode = this.getNode(to);
-    if(!toNode) throw new Error(`${to} does not exist.`);
+    if (!toNode) throw new Error(`${to} does not exist.`);
 
     // set up the distance table, value record the shortest 'from-to' distance
     const distances: { [label: string]: number } = {};
@@ -177,9 +182,8 @@ class WGraph {
     }
     distances[from] = 0;
 
-    const previousNodes: { [label: string]: WNode|null } = {[from]: null};
+    const previousNodes: { [label: string]: WNode | null } = { [from]: null };
     const visitedNodes = new Set<WNode>();
-
 
     const queue = new PriorityQueue(); // breadth first traversal
     queue.enqueue(new WNodeEntry(fromNode, 0));
@@ -189,7 +193,7 @@ class WGraph {
       visitedNodes.add(current);
 
       // current -> neighbor -> to
-      for (const neighbor of current.getNeighbor()) {
+      for (const neighbor of current.getEdges()) {
         if (visitedNodes.has(neighbor.to)) continue;
 
         const currentLabel = current.getLabel();
@@ -211,7 +215,6 @@ class WGraph {
     previousNodes: { [label: string]: WNode },
     toNode: WNode
   ): Path {
-
     const stack: WNode[] = [];
     stack.push(toNode);
 
@@ -229,6 +232,32 @@ class WGraph {
     return path;
   }
 
+  hasCycle(): boolean {
+    const visited = new Set<WNode>();
+    const nodes = this.getNodes();
+
+    for (const node of nodes) {
+      if (!visited.has(node) && this._hasCycle(node, null, visited))
+        return true;
+    }
+
+    return false;
+  }
+
+  private _hasCycle(node: WNode, parent: WNode, visited: Set<WNode>): boolean {
+    if (visited.has(node)) return false;
+
+    visited.add(node);
+
+    for (const edge of node.getEdges()) {
+      if (edge.to === parent) continue;
+      if (visited.has(edge.to) || this._hasCycle(edge.to, node, visited))
+        return true;
+    }
+
+    return false;
+  }
+
   private getNodes(): WNode[] {
     return Object.values(this.nodes);
   }
@@ -244,7 +273,7 @@ class WGraph {
   print() {
     console.log('---');
     Object.values(this.nodes).forEach((node) => {
-      node.getNeighbor().forEach((edge) => {
+      node.getEdges().forEach((edge) => {
         edge.print();
       });
       console.log('---');
@@ -256,14 +285,16 @@ const wgraph1 = new WGraph();
 wgraph1.addNode('A');
 wgraph1.addNode('B');
 wgraph1.addNode('C');
+wgraph1.addNode('D');
 
 wgraph1.addEdge('A', 'B', 1);
 wgraph1.addEdge('B', 'C', 2);
-wgraph1.addEdge('A', 'C', 10);
+wgraph1.addEdge('C', 'A', 10);
 // wgraph1.print();
 
-const path = wgraph1.getShortestPath("A", "C");
-path.print();
+// const path = wgraph1.getShortestPath('A', 'C');
+// path.print();
 
 // const path1 = wgraph1.getShortestPath("A", "K");
 
+console.log(wgraph1.hasCycle());
