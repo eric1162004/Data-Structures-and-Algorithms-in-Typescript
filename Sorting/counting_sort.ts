@@ -42,7 +42,7 @@ function countSort(array: number[], max: number) {
   }
 }
 
-const array = [5, 4, 3, 2, 1]; // 4 passes
-// const array = [1, 2, 3, 4, 5]; // 1 pass
-countSort(array, 5);
-console.log(array);
+// const array = [5, 4, 3, 2, 1]; // 4 passes
+// // const array = [1, 2, 3, 4, 5]; // 1 pass
+// countSort(array, 5);
+// console.log(array);
