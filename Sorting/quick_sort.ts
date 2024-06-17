@@ -53,7 +53,7 @@ function swap(array: number[], index_a: number, index_b: number) {
   array[index_b] = temp;
 }
 
-const array = [5, 4, 3, 2, 1]; // 4 passes
+// const array = [5, 4, 3, 2, 1]; // 4 passes
 // const array = [1, 2, 3, 4, 5]; // 1 pass
-quickSort(array);
-console.log(array);
+// quickSort(array);
+// console.log(array);
