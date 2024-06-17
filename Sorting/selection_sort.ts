@@ -30,6 +30,6 @@ function swap(array: number[], index_a: number, index_b: number) {
 }
 
 // const array = [5, 4, 3, 2, 1];
-// const array = [1, 2, 3, 4, 5];
+// // const array = [1, 2, 3, 4, 5];
 // selectionSort(array);
 // console.log(array);
