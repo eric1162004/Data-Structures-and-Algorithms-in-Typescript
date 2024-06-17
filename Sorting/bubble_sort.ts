@@ -7,7 +7,10 @@ BUBBLE SORT
 - in each successive pass, iterate item 0 to n-pass
 - if no swap during any pass, the list is sorted => done sorting!
 
-worst case O(n^2) comparison 
+time complexity    best     worst
+pass               O(1)     O(n)
+comparisions       O(n)     O(n)
+total              O(n)     O(n^2)
 */
 
 function bubbleSort(array: number[]) {
@@ -20,7 +23,7 @@ function bubbleSort(array: number[]) {
         hasSwapped = true;
       }
     }
-    if (!hasSwapped) break;
+    if (!hasSwapped) break; // array is sorted, exit!
   }
 }
 
